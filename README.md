@@ -66,7 +66,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({ |
   plugins: [                  |
-    tailwindcss(),            |-> configuracion en el vite para que funcione tailwindcss(mirar documentacion)
+    tailwindcss(),            |-> configuracion    en                        el vite para que funcione tailwindcss(mirar documentacion)
   ],                          |
 })                            |
 
