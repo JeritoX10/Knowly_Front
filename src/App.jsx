@@ -1,6 +1,7 @@
 import NavBar from './Components/NavBar'
 import Footer from './Components/Footer'
 import './App.css'
+import Login  from './Pages/Login'	
 
 function App() {
 	return (
@@ -15,6 +16,8 @@ function App() {
 					contacto
 				*/}
 			</main>
+
+			
 			
 			<Footer />
 

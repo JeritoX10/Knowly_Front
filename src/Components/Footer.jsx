@@ -10,6 +10,11 @@ const Footer =()=>{
 
             <p>
                 programadores (5)
+                -Juanjose castrillon
+                -Johan Cadavid
+                -Jeromino Taborda
+                -Sebastian Herrera
+                -Sharon Asprilla
             </p>
                 <p>
                     <a href="#facebook">Facebook</a>

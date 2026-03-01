@@ -10,7 +10,7 @@ const NavBar = function (){
                 <a href="#">cursos</a>
                 <a href="#">contacto</a>
                 <a href="#">redes</a>
-                <a href="#">login</a>
+                <a href="login.jsx">login</a>
                 <a href="#">certificado</a>
                 
             </nav>

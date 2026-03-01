@@ -41,7 +41,7 @@ body{
 }
 
 .NavBar a {
-    color: #333;
+    color: #fffafa;
     text-decoration: none;
     font-weight: 600;
     margin-left: 80px;
@@ -52,7 +52,7 @@ body{
 
 
 .NavBar a:hover {
-    color: #c8a0ff;
+    color: black;
 }
 
 
