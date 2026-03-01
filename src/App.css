@@ -30,7 +30,7 @@ body{
 
     background: rgba(255, 255, 255, 0.2); 
     /* Transparencia */ backdrop-filter: blur(10px);
-     /* Difuminado */ -webkit-backdrop-filter: blur(10px); /* Compatibilidad Safari */
+     /* Difuminado */ -webkit-backdrop-filter: blur(10px); 
       border-bottom: 1px solid rgba(255, 255, 255, 0.3)
 }
 
@@ -53,4 +53,28 @@ body{
 
 .NavBar a:hover {
     color: #c8a0ff;
+}
+
+
+footer { 
+    padding: 20px; 
+    text-align: center; 
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    color: white; 
+    background-color: black;
+    
+} 
+
+footer a {
+     color: #ffcc00; 
+     text-decoration: none; 
+     margin: 0 10px; 
+    
+} 
+
+footer a:hover {
+    
+    text-decoration: underline; 
 }
