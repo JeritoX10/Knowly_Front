@@ -28,10 +28,11 @@ body{
     z-index: 100px;
     flex-wrap: wrap;
 
-    background: rgba(255, 255, 255, 0.2); 
-    /* Transparencia */ backdrop-filter: blur(10px);
-     /* Difuminado */ -webkit-backdrop-filter: blur(10px); 
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3)
+    /* make navbar more opaque for visibility */
+    background: rgba(255, 255, 255, 0.85); 
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); 
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .NavBar img {
@@ -41,7 +42,7 @@ body{
 }
 
 .NavBar a {
-    color: #fffafa;
+    color: #000; /* changed to black for readability */
     text-decoration: none;
     font-weight: 600;
     margin-left: 80px;
@@ -187,4 +188,94 @@ footer a:hover {
 }
 
 .plan-cta:hover{ background: #3730a3; }
+
+/* --- Login page styles --- */
+.login-container {
+    max-width: 360px;
+    margin: 120px auto 0;
+    background: rgba(255,255,255,0.85);
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.login-container h2 {
+    margin-bottom: 24px;
+    color: #1f2937;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+}
+
+.btn-primary {
+    background: #4f46e5;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background: #3730a3;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 24px 0;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #cbd5e1;
+}
+
+.divider span {
+    padding: 0 12px;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.social-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.btn-social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    cursor: pointer;
+    background: white;
+    font-weight: 500;
+}
+
+.btn-social img {
+    width: 20px;
+    height: 20px;
+}
+
+.btn-social.google { border-color: #db4437; }
+.btn-social.facebook { border-color: #4267B2; }
+
+.btn-social.google:hover { background: #fbe9e7; }
+.btn-social.facebook:hover { background: #e9f0ff; }
 

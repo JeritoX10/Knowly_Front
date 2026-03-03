@@ -9,10 +9,10 @@ const NavBar = function () {
       <nav className="NavBar">
         <img src="src/Assets/logo_knowly-removebg-preview.png" alt="logo" />
 
-        <a href="#">cursos</a>
-        <a href="#">contacto</a>
+        <Link to="/cursos">cursos</Link>
+        <Link to="/contacto">contacto</Link>
         <a href="#">redes</a>
-        <a href="login.jsx">login</a>
+        <Link to="/login">login</Link>
         <a href="#">certificado</a>
 
         {/* Tarjeta Membresía */}

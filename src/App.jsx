@@ -1,35 +1,29 @@
 import NavBar from './Components/NavBar'
 import Footer from './Components/Footer'
-import Card from './Components/Card'
 import './App.css'
-import Login  from './Pages/Login'	
+
+import { Routes, Route } from 'react-router-dom'
+import Home from './Pages/Home'
+import Login from './Pages/Login'
+import Contacto from './Pages/Contacto'
+import Cursos from './Pages/Cursos'
+import Estudiantes from './Pages/Estudiantes'
 
 function App() {
 	return (
-		<div>
+		<div className="app">
 			<NavBar />
-			<main className="Cards-container" style={{ marginTop: '80px', minHeight: 'calc(100vh - 80px)' }}>
-				{/* Aquí van las páginas
-					redes
-					login
-					certificado
-					cursos
-					contacto
-				*/}
-
-			<Card />
-			<Card />
-			<Card />
-			<Card />
-			<Card />
-			<Card />
-			<Card />
-			<Card />
+			<main className="main" style={{ marginTop: '80px' }}>
+				<Routes>
+					<Route path="/" element={<Home />} />
+					<Route path="/login" element={<Login />} />
+					<Route path="/contacto" element={<Contacto />} />
+					<Route path="/cursos" element={<Cursos />} />
+					<Route path="/estudiantes" element={<Estudiantes />} />
+				</Routes>
 			</main>
 
-			
 			<Footer />
-
 		</div>
 	)
 }
