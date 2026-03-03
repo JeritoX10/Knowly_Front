@@ -126,3 +126,65 @@ footer a:hover {
   padding: 24px;           /* separación del header y bordes */
   padding-top: 40px;       /* más aire debajo del header */
 }
+
+/* Estudiantes: estilos de planes */
+.students-page{
+    padding: 40px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    color: #0f172a;
+}
+
+.students-title{
+    font-size: 28px;
+    color: #08122a;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.plans-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 980px;
+}
+
+.plan-card{
+    background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(250,250,255,0.85));
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 8px 24px rgba(9,30,66,0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: start;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.plan-card:hover{
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(9,30,66,0.18);
+}
+
+.plan-title{ font-size: 18px; margin: 0; color: #0b2b4a; }
+.plan-price{ display:flex; align-items: baseline; gap:8px; }
+.amount{ font-size: 22px; font-weight: 700; color: #1b3b6f; }
+.period{ font-size: 13px; color: #475569; }
+.plan-desc{ margin: 0; color: #334155; opacity: .95; }
+
+.plan-cta{
+    margin-top: 8px;
+    align-self: stretch;
+    background: #4f46e5;
+    color: white;
+    border: none;
+    padding: 10px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.plan-cta:hover{ background: #3730a3; }
+

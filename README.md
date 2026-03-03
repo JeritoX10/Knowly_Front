@@ -83,5 +83,16 @@ src/
 ├── App.jsx # Orquestador principal de la vista actual
 └── main.jsx # Punto de entrada de React
 
+## Integrantes del Equipo
+
+| Nombre                  | Rol principal              | Usuario GitHub     |
+|-------------------------|----------------------------|--------------------|
+| [Johan Cadavid]         | Líder / Backend            | @[johanc178]         |
+| [Sebastian Herrera]     | Frontend Lead              | @[Sebasherrera01]         |
+| [Sharon Asprilla]       | Backend / Base de datos    | @[sharon-asprilla] |
+| [Juan Jose Castrillon]  | frond/create               | @[Juanjo0828]         |
+| [Jeronimo Taborda]      | backend                    | @[usuario]         |
+
+
 
 
