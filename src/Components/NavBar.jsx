@@ -7,12 +7,11 @@ const NavBar = function () {
   return (
     <aside>
       <nav className="NavBar">
-        <img src="src/Assets/logo_knowly-removebg-preview.png" alt="logo" />
+        <img src="/src/Assets/logo_knowly-removebg-preview.png" alt="logo" />
 
         <Link to="/cursos">cursos</Link>
         <Link to="/contacto">contacto</Link>
         <a href="#">redes</a>
-        <Link to="/login">login</Link>
         <Link to="/certificados">certificado</Link>
 
         {/* Tarjeta Membresía */}
