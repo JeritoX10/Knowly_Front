@@ -4,6 +4,7 @@ import { redirect } from "../Helpers/alerts"
 import { saveLocalStorage } from "../Helpers/local-storage"
 // mockapi de validacion en react
 // temporal 
+// coloque que "contraseña" es contrasea porque en mokapi no deja poner la ñ  y es una simulacion mientras tanto 
 
 const Login = () => {
   const [getCorreo, setCorreo] = useState("")
