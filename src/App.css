@@ -56,6 +56,15 @@ body{
     color: black;
 }
 
+.btn-acceder {
+  background-color:  #B19CD9;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+
 
 footer { 
     padding: 20px; 
