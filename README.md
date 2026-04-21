@@ -96,7 +96,7 @@ src/
 | [Sebastian Herrera]     | Frontend Lead              | @[Sebasherrera01]         |
 | [Sharon Asprilla]       | Backend / Base de datos    | @[sharon-asprilla] |
 | [Juan Jose Castrillon]  | frond/create               | @[Juanjo0828]         |
-| [Jeronimo Taborda]      | backend                    | @[usuario]         |
+| [Jeronimo Taborda]      | backend                    | @[jeritoX10]         |
 
 
 
