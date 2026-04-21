@@ -7,7 +7,9 @@ const NavBar = function () {
   return (
     <aside>
       <nav className="NavBar">
-        <img src="/src/Assets/logo_knowly-removebg-preview.png" alt="logo" />
+        <Link to="/home">
+          <img src="/src/Assets/logo_knowly-removebg-preview.png" alt="logo" />
+        </Link>
 
         <Link to="/cursos">cursos</Link>
         <Link to="/contacto">contacto</Link>
