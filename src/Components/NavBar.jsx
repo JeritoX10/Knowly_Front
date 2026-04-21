@@ -7,17 +7,22 @@ const NavBar = function () {
   return (
     <aside>
       <nav className="NavBar">
-        <img src="/src/Assets/logo_knowly-removebg-preview.png" alt="logo" />
+        <Link to="/home">
+          <img src="/src/Assets/logo_knowly-removebg-preview.png" alt="logo" />
+        </Link>
 
         <Link to="/cursos">cursos</Link>
-        <Link to="/contacto">contacto</Link>
-        <a href="#">redes</a>
+        <Link to="/contacto">comunidad</Link>
+        <Link to="/blogs">blogs</Link>
         <Link to="/certificados">certificado</Link>
-
         {/* Tarjeta Membresía */}
         <div onClick={() => setOpen(!open)} style={{ cursor: "pointer" }}>
           Membresía
         </div>
+        <Link to="/login"className="btn-acceder">Acceder</Link>
+
+
+        
 
         {/* Subtarjeta Estudiantes */}
         {open && (
