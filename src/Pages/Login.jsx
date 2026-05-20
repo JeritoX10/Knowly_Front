@@ -11,13 +11,25 @@ const Login = () => {
   const [getUsuario, setUsuario] = useState([])
 
   function fetchUsuario() {
-    fetch(end_points.usuario)
-      .then((response) => response.json())
+    console.log("Intentando descargar usuarios de:", end_points.usuario);
+    fetch(end_points.usuario, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error("Error en la respuesta del servidor");
+        return response.json();
+      })
       .then((data) => {
-        console.log("DATOS DE LA API:", data) // muestra en consola los datos que se va agrendando en el back de la basee de datos
+        console.log("Datos cargados correctamente:", data);
         setUsuario(data)
       })
-      .catch((error) => console.log(error))
+      .catch((error) => {
+        console.error("Error al cargar usuarios:", error);
+        // Opcional: mostrar una alerta si la API no carga
+      })
   }
 
   useEffect(() => {
@@ -25,10 +37,10 @@ const Login = () => {
   }, [])
 
   const findUsuario = () => {
-    return getUsuario.find(
+    return Array.isArray(getUsuario) && getUsuario.find(
       (item) =>
         item.correo?.trim().toLowerCase() === getCorreo.trim().toLowerCase() &&
-        item.contrasenia === getContrasenia && 
+        String(item.contrasenia) === String(getContrasenia) && 
         item.rol?.toUpperCase() === getRol.toUpperCase()
     )
   }

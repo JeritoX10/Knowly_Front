@@ -2,9 +2,27 @@
 
 [knowly]
 
-## consumo de la api del back
-https://github.com/sharon-Asprilla/knowly_back
-trae los datos de la api
+## Estructura de la API
+La API devuelve los usuarios con la siguiente estructura de campos obligatorios:
+
+```json
+{
+  "ideusuario": "00232",
+  "rol": "PROFESOR",
+  "nombre": "luisa",
+  "apellido": "Ramírez",
+  "documento": "287654321",
+  "correo": "luisra@gmail.edu.com",
+  "contrasenia": "87654321"
+}
+```
+
+## URL DE LA API DEL BACK
+-------------------------------------------------------------------
+https://knowly-back-10.onrender.com
+-------------------------------------------------------------------
+con base de datos temporal por lo cual hay que cativarla primero porque si no tiene  movimiento en 20 minutos se vacea por completo la api,
+por eso al desplegar la plataforma se deberia de hacer un put en postman para poder ver los datos  que envias con la misma estructura que esta de los datos de la api arriba 
 
 ## Introducción
 
@@ -96,7 +114,3 @@ src/
 | [Sharon Asprilla]       | Backend / Base de datos    | @[sharon-asprilla] |
 | [Juan Jose Castrillon]  | frond/create               | @[Juanjo0828]         |
 | [Jeronimo Taborda]      | backend                    | @[jeritoX10]         |
-
-
-
-
