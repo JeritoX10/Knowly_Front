@@ -22,6 +22,8 @@ const Login = () => {
   const [modo, setModo] = useState(initialModo);
   const [rol, setRol] = useState(initialRol);
   const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [documento, setDocumento] = useState("");
   const [correo, setCorreo] = useState("");
   const [contrasea, setContrasea] = useState("");
   const [confirmar, setConfirmar] = useState("");
@@ -92,10 +94,13 @@ const Login = () => {
     setError(null);
     try {
       const user = await registerUser({
+        ideusuario: Math.floor(Math.random() * 100000).toString().padStart(5, '0'), // Genera un ID como '00232'
         nombre,
+        apellido,
+        documento,
         correo,
-        contrasea,
-        rol,
+        contrasenia: contrasea, // Mapeo a la llave que espera la API
+        rol: rol.toUpperCase(), // Asegura que sea 'PROFESOR' o 'ESTUDIANTE'
         planId: FREE_PLAN_ID,
       });
       saveLocalStorage("Usuario", user);
@@ -230,10 +235,24 @@ const Login = () => {
             <form className="login-form" onSubmit={handleRegister}>
               <input
                 type="text"
-                placeholder="Nombre completo"
+                placeholder="Nombre"
                 required
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Apellido"
+                required
+                value={apellido}
+                onChange={(e) => setApellido(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Documento de identidad"
+                required
+                value={documento}
+                onChange={(e) => setDocumento(e.target.value)}
               />
               <input
                 type="email"
