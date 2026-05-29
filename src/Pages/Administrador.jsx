@@ -102,8 +102,17 @@ const Administrador = () => {
     return (
         <div className="main px-6 md:px-20 text-black">
             <div className="flex justify-between items-center mb-8">
-                <h1 className="text-4xl font-black text-white drop-shadow-md">Panel de Control</h1>
-                <button onClick={() => setIsAuthed(false)} className="bg-white/20 text-white px-6 py-2 rounded-xl font-bold hover:bg-white/30 transition">Salir</button>
+                <div className="flex flex-col">
+                    <h1 className="text-4xl font-black text-white drop-shadow-md">Panel de Control</h1>
+                    <p className="text-purple-100 text-sm mt-1">Gestionando {usuarios.length} usuarios en la API</p>
+                </div>
+                <div className="flex gap-3">
+                    <button onClick={fetchUsuarios} className="bg-white/20 text-white px-4 py-2 rounded-xl font-bold hover:bg-white/40 transition flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>
+                        Refrescar API
+                    </button>
+                    <button onClick={() => setIsAuthed(false)} className="bg-red-500/20 text-white px-6 py-2 rounded-xl font-bold hover:bg-red-500/40 transition">Salir</button>
+                </div>
             </div>
             
             <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-purple-100">
