@@ -8,6 +8,7 @@ import {
   Sparkles,
   ArrowRight,
   Mail,
+  BarChart3,
   Check, // Added Check icon for PlanCard
   Users,
 } from "lucide-react";
@@ -122,6 +123,16 @@ function Home() {
               Explorar cursos <ArrowRight size={18} />
             </Link>
             <Link to="/login" className="landing-btn landing-btn--outline">Iniciar sesión</Link>
+          <a 
+            href="https://cesdentpeda.streamlit.app/Analisis_de_datos_con_graficos" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="landing-btn landing-btn--primary flex items-center gap-2"
+            style={{ textDecoration: 'none' }}
+          >
+            <BarChart3 size={20} />
+            Análisis de Datos
+          </a>
           </div>
         </div>
       </section>

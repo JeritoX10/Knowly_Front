@@ -40,24 +40,27 @@ function saveLocalUser(user) {
 export function persistLocalUser(user) {
   if (!user?.correo) return;
   saveLocalUser({
-    id: user.id,
+    id: user.id || user.ideusuario,
+    ideusuario: user.ideusuario,
     nombre: user.nombre,
+    apellido: user.apellido,
+    documento: user.documento,
     correo: user.correo,
-    contrasea: user.contrasea,
+    contrasenia: user.contrasenia || user.contrasea,
     rol: user.rol ?? "estudiante",
     planId: user.planId ?? FREE_PLAN_ID,
-    curso: user.curso || "Knowly",
   });
 }
 
 function buildApiPayload(user) {
   return {
+    ideusuario: user.ideusuario,
+    rol: user.rol?.toUpperCase() || "ESTUDIANTE",
     nombre: user.nombre,
+    apellido: user.apellido,
+    documento: user.documento,
     correo: user.correo,
-    contrasea: user.contrasea,
-    curso: user.curso || "Knowly",
-    planId: user.planId ?? FREE_PLAN_ID,
-    rol: user.rol ?? "estudiante",
+    contrasenia: user.contrasenia || user.contrasea,
   };
 }
 
@@ -97,22 +100,13 @@ async function syncUserToApi(user) {
   return user;
 }
 
-export async function registerUser({ nombre, correo, contrasea, rol, planId = FREE_PLAN_ID }) {
-  const userDraft = {
-    nombre,
-    correo,
-    contrasea,
-    rol,
-    planId,
-    curso: "Knowly",
-  };
-
+export async function registerUser(userData) {
   let apiUser = null;
   try {
     const response = await fetch(end_points.usuario, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(buildApiPayload(userDraft)),
+      body: JSON.stringify(buildApiPayload(userData)),
     });
     if (response.ok) {
       apiUser = await response.json();
@@ -122,12 +116,8 @@ export async function registerUser({ nombre, correo, contrasea, rol, planId = FR
   }
 
   const user = {
-    id: apiUser?.id ?? `local-${Date.now()}`,
-    nombre,
-    correo,
-    contrasea,
-    rol,
-    planId: apiUser?.planId ?? planId,
+    ...userData,
+    id: apiUser?.id || apiUser?.ideusuario || `local-${Date.now()}`,
   };
 
   persistLocalUser(user);
@@ -137,7 +127,7 @@ export async function registerUser({ nombre, correo, contrasea, rol, planId = FR
 export async function findUserForLogin(correo, contrasea) {
   const localUsers = getLocalUsers();
   const localMatch = localUsers.find(
-    (u) => u.correo === correo && u.contrasea === contrasea
+    (u) => u.correo === correo && (u.contrasenia === contrasea || u.contrasea === contrasea)
   );
 
   if (localMatch) {
@@ -156,7 +146,7 @@ export async function findUserForLogin(correo, contrasea) {
   }
 
   const apiMatch = apiUsers.find(
-    (u) => u.correo === correo && u.contrasea === contrasea
+    (u) => u.correo === correo && (u.contrasenia === contrasea || u.contrasea === contrasea)
   );
 
   if (!apiMatch) return null;
