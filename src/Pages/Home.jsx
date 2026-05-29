@@ -1,211 +1,88 @@
-import { useState, useEffect, useRef } from "react"
-import { Link } from "react-router-dom"
-import logo from "../Assets/logo_knowly-removebg-preview.png"
+import { Link } from "react-router-dom";
+import {
+  BookOpen,
+  GraduationCap,
+  Award,
+  Upload,
+  ShieldCheck,
+  Sparkles,
+  ArrowRight,
+  Mail,
+  Check, // Added Check icon for PlanCard
+  Users,
+} from "lucide-react";
+import { studentMemberships, teacherMemberships } from "../data/memberships";
+import { planCtaUrl } from "../Helpers/checkout-flow";
+import { KNOWLY_LOGO } from "../Helpers/branding";
 
-const Home = () => {
-  const [scrollY, setScrollY] = useState(0)
-  const [isVisible, setIsVisible] = useState({})
-  const sectionRefs = useRef({})
+const studentPlans = studentMemberships;
+const teacherPlans = teacherMemberships; // Define teacherPlans here
 
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY)
-    window.addEventListener("scroll", handleScroll, { passive: true })
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible((prev) => ({ ...prev, [entry.target.id]: true }))
-          }
-        })
-      },
-      { threshold: 0.15 }
-    )
-    Object.values(sectionRefs.current).forEach((ref) => {
-      if (ref) observer.observe(ref)
-    })
-    return () => observer.disconnect()
-  }, [])
-
-  const registerRef = (id) => (el) => {
-    sectionRefs.current[id] = el
-  }
-
-  const stats = [
-    { value: "12K+", label: "Estudiantes activos" },
-    { value: "340+", label: "Cursos disponibles" },
-    { value: "98%", label: "Tasa de satisfacción" },
-    { value: "180+", label: "Instructores expertos" },
-  ]
-  const pillars = [
-    {
-      num: "01",
-      title: "Misión",
-      desc: "Democratizar la educación técnica, permitiendo que expertos compartan su saber y estudiantes se certifiquen.",
-      icon: "🎯",
-    },
-    {
-      num: "02",
-      title: "Visión",
-      desc: "Ser la plataforma líder de habla hispana, el puente principal entre el aprendizaje y el éxito profesional.",
-      icon: "🚀",
-    },
-    {
-      num: "03",
-      title: "Propósito",
-      desc: "Impulsar el crecimiento personal a través de la educación accesible, transformando pasiones en carreras.",
-      icon: "✨",
-    },
-  ]
+// Define PlanCard component outside Home
+function PlanCard({ plan, tipo = "estudiante" }) {
+  const ctaTo = planCtaUrl(plan, tipo);
 
   return (
-    <div style={{ 
-      fontFamily: "'Outfit', 'Segoe UI', sans-serif", 
-      background: "linear-gradient(90deg, rgb(165, 110, 245) 0%, rgb(180, 130, 250) 25%, rgb(220, 195, 255) 50%, rgb(180, 130, 250) 75%, rgb(165, 110, 245) 100%)", 
-      color: "#18181B", 
-      overflowX: "hidden" 
+    <article
+      className="membership-plan-card" // Using a class from the inline style block
+      style={{
+        background: "rgba(255, 255, 255, 0.4)",
+        border: "1px solid rgba(255, 255, 255, 0.5)",
+        borderRadius: "24px",
+        padding: "28px",
+        transition: "all 0.3s ease",
+        backdropFilter: "blur(12px)",
+      }}
+    >
+      <h3 style={{ fontSize: "24px", fontWeight: "700", marginBottom: "12px", color: "#18181B" }}>{plan.title}</h3>
+      <div style={{ fontSize: "36px", fontWeight: "800", color: "#1D4ED8", marginBottom: "16px" }}>
+        {plan.price}
+        <small style={{ fontSize: "16px", fontWeight: "500", color: "#4B5563" }}>/{plan.period}</small>
+      </div>
+      <p style={{ fontSize: "15px", color: "#4B5563", marginBottom: "24px" }}>{plan.desc}</p>
+      <ul style={{ listStyle: "none", padding: 0, marginBottom: "24px" }}>
+        {plan.benefits.map((benefit, index) => (
+          <li key={index} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "14px", color: "#18181B", marginBottom: "8px" }}>
+            <Check size={16} style={{ color: "#22c55e" }} /> {benefit}
+          </li>
+        ))}
+      </ul>
+      <Link to={ctaTo} className="btn-primary" style={{ width: "100%" }}>
+        Elegir {plan.title}
+      </Link>
+    </article>
+  );
+}
+
+function Home() {
+  const exploreLinks = [
+    { to: "/cursos", label: "Explorar cursos", desc: "Mira el catálogo sin registrarte" },
+    { to: "/blogs", label: "Leer blogs", desc: "Artículos y novedades educativas" },
+    { to: "/contacto", label: "Comunidad", desc: "Reseñas y opiniones de usuarios" },
+    { to: "/certificados", label: "Certificados", desc: "Conoce nuestro sistema de acreditación" },
+  ];
+
+  const developers = [
+    { name: "Juan José Castrillón", role: "Desarrollo frontend" },
+    { name: "Johan Cadavid", role: "Desarrollo backend" },
+    { name: "Jerónimo Taborda", role: "Integración y UI" },
+    { name: "Sebastián Herrera", role: "Arquitectura" },
+    { name: "Sharon Asprilla", role: "Diseño y QA" },
+  ];
+
+  // Removed the inline <style> block and duplicate <nav> from Home component
+  // The main App.jsx already renders NavBar and global styles should be in App.css or index.css
+
+  // Use KNOWLY_LOGO instead of undefined 'logo'
+  // Removed scrollY dependency as it's not defined in this scope and NavBar is handled by App.jsx
+
+  return (
+    <div className="main" style={{
+      fontFamily: "'Outfit', 'Segoe UI', sans-serif",
+      background: "linear-gradient(90deg, rgb(165, 110, 245) 0%, rgb(180, 130, 250) 25%, rgb(220, 195, 255) 50%, rgb(180, 130, 250) 75%, rgb(165, 110, 245) 100%)",
+      color: "#18181B",
+      overflowX: "hidden"
     }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Syne:wght@700;800&display=swap');
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(32px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes pulse-ring {
-          0%   { transform: scale(1);   opacity: 0.4; }
-          100% { transform: scale(1.6); opacity: 0;   }
-        }
-        @keyframes gradientShift {
-          0%   { background-position: 0% 50%; }
-          50%  { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-
-        .nav-link {
-          color: #4B5563;
-          text-decoration: none;
-          font-size: 15px;
-          font-weight: 500;
-          transition: color 0.2s;
-        }
-        .nav-link:hover { color: #000000; }
-
-        .btn-primary {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          background: #000000;
-          color: #fff;
-          border: none;
-          padding: 14px 32px;
-          border-radius: 16px;
-          font-size: 16px;
-          font-weight: 700;
-          cursor: pointer;
-          transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
-          text-decoration: none;
-          width: fit-content;
-        }
-        .btn-primary:hover {
-          transform: translateY(-2px) scale(1.02);
-          box-shadow: 0 12px 30px rgba(29, 78, 216, 0.3);
-          background: #1e40af;
-        }
-
-        .btn-ghost {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          background: rgba(255, 255, 255, 0.3);
-          color: #18181B;
-          border: 1.5px solid rgba(0,0,0,0.1);
-          padding: 13px 26px;
-          border-radius: 16px;
-          font-size: 15px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.2s;
-          text-decoration: none;
-          width: fit-content;
-          backdrop-filter: blur(4px);
-        }
-        .btn-ghost:hover {
-          background: rgba(255, 255, 255, 0.5);
-          border-color: #18181B;
-        }
-
-        .course-card, .pillar-card {
-          background: rgba(255, 255, 255, 0.4);
-          border: 1px solid rgba(255, 255, 255, 0.5);
-          border-radius: 24px;
-          padding: 28px;
-          transition: all 0.3s ease;
-          backdrop-filter: blur(12px);
-        }
-        .course-card:hover {
-          transform: translateY(-8px);
-          background: rgba(255, 255, 255, 0.6);
-          box-shadow: 0 20px 40px rgba(0,0,0,0.05);
-        }
-
-        .section-reveal {
-          opacity: 0;
-          transform: translateY(30px);
-          transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-        .section-reveal.visible {
-          opacity: 1;
-          transform: translateY(0);
-        }
-
-        .gradient-text {
-          background: linear-gradient(135deg, #1e40af, #7C3AED, #1e40af);
-          background-size: 200% 200%;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: gradientShift 4s ease infinite;
-        }
-      `}</style>
-
-      {/* ── NAVBAR ── */}
-      <nav style={{
-        position: "fixed",
-        top: 0, left: 0, right: 0,
-        zIndex: 100,
-        padding: "0 48px",
-        height: 70,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        background: scrollY > 40 ? "rgba(220, 195, 255, 0.7)" : "transparent",
-        backdropFilter: scrollY > 40 ? "blur(20px)" : "none",
-        transition: "all 0.3s",
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <img src={logo} alt="Logo" style={{ height: 35 }} />
-          <span style={{ fontFamily: "'Syne', sans-serif", fontSize: 22, fontWeight: 800, color: "#1D4ED8", letterSpacing: "-0.02em" }}>
-            Knowly
-          </span>
-        </div>
-
-        <div style={{ display: "flex", gap: 36 }}>
-          <Link className="nav-link" to="/blogs">Blogs</Link>
-          <Link className="nav-link" to="/cursos">Cursos</Link>
-          <Link className="nav-link" to="/contacto">Nosotros</Link>
-          <Link className="nav-link" to="/administrador">Administracion</Link>
-        </div>
-
-        <Link to="/login" className="btn-primary" style={{ padding: "8px 20px", fontSize: 14, borderRadius: 12 }}>
-          Acceder
-        </Link>
-      </nav>
 
       {/* ── HERO ── */}
       <section style={{
@@ -220,10 +97,10 @@ const Home = () => {
       }}>
         <div style={{ animation: "fadeUp 1s ease forwards", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center" }}>
           
-          <img 
-            src={logo} 
-            alt="Knowly Logo" 
-            style={{ width: 180, height: 180, marginBottom: 20, filter: "drop-shadow(0 10px 15px rgba(0,0,0,0.1))" }} 
+          <img
+            src={KNOWLY_LOGO}
+            alt="Knowly Logo"
+            style={{ width: 180, height: 180, marginBottom: 20, filter: "drop-shadow(0 10px 15px rgba(0,0,0,0.1))" }}
           />
 
           <div style={{
@@ -233,103 +110,154 @@ const Home = () => {
             fontSize: 13, fontWeight: 600, color: "#1e40af",
             marginBottom: 24,
           }}>
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#1D4ED8", display: "inline-block", animation: "pulse-ring 1.5s infinite" }} />
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#1D4ED8", display: "inline-block", /* animation: "pulse-ring 1.5s infinite" */ }} />
             Plataforma educativa #1 en LATAM
           </div>
-
-          <h1 style={{
-            fontFamily: "'Syne', sans-serif",
-            fontSize: "clamp(40px, 7vw, 80px)",
-            fontWeight: 800,
-            lineHeight: 1.1,
-            marginBottom: 24,
-            maxWidth: 900,
-            color: "#0f172a"
-          }}>
-            Aprende sin límites. <br/>
-            <span className="gradient-text">Certifícate</span> sin fronteras.
-          </h1>
-
-          <p style={{
-            fontSize: "clamp(17px, 2vw, 21px)",
-            color: "#334155",
-            maxWidth: 600,
-            lineHeight: 1.6,
-            marginBottom: 40,
-            fontWeight: 500,
-            marginRight: "auto",
-            marginLeft: "auto"
-          }}>
-            La plataforma donde el conocimiento se comparte, los logros se certifican y las carreras se transforman.
+          <p className="landing-subtitle">
+            La plataforma donde profesores publican y venden cursos, y estudiantes acceden a
+            contenido certificado con estándares rigurosos de calidad.
           </p>
-
-          <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", width: "100%" }}>
-            <Link to="/login" className="btn-primary">
-              Comenzar gratis →
+          <div className="landing-hero-actions">
+            <Link to="/cursos" className="landing-btn landing-btn--primary">
+              Explorar cursos <ArrowRight size={18} />
             </Link>
-            {/* Aquí se actualizó el enlace para redirigir al componente Cursos */}
-            <Link to="/cursos" className="btn-ghost">
-              Ver cursos
-            </Link>
-          </div>
-
-          <div style={{ marginTop: 48, display: "flex", alignItems: "center", gap: 12 }}>
-            <span style={{ color: "#475569", fontSize: 14, fontWeight: 500 }}>
-              <span style={{ color: "#0f172a", fontWeight: 700 }}>+12,000</span> estudiantes ya confían en nosotros
-            </span>
+            <Link to="/login" className="landing-btn landing-btn--outline">Iniciar sesión</Link>
           </div>
         </div>
       </section>
 
-      {/* ── STATS ── */}
-      <div
-        id="stats"
-        ref={registerRef("stats")}
-        className={`section-reveal ${isVisible.stats ? "visible" : ""}`}
-        style={{ background: "rgba(255,255,255,0.3)", padding: "40px 0", borderY: "1px solid rgba(255,255,255,0.5)" }}
-      >
-        <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
-          {stats.map((s, i) => (
-            <div key={i} style={{ textAlign: "center", padding: "20px" }}>
-              <p style={{ fontFamily: "'Syne', sans-serif", fontSize: 36, fontWeight: 800, color: "#000000" }}>{s.value}</p>
-              <p style={{ color: "#475569", fontSize: 14, fontWeight: 600 }}>{s.label}</p>
-            </div>
-          ))}
+      <section className="landing-section landing-about" id="nosotros">
+        <div className="landing-container">
+          <header className="landing-section-header">
+            <h2>¿Qué es Knowly?</h2>
+            <p>
+              Knowly es una plataforma de compra y subida de cursos pensada para profesores y
+              estudiantes. Los docentes crean, publican y monetizan su contenido; los estudiantes
+              adquieren formación acreditada, evaluada y respaldada por un sello de calidad.
+            </p>
+          </header>
+          <div className="landing-about-grid">
+            <article className="landing-about-card">
+              <div className="landing-icon-wrap"><Upload size={26} /></div>
+              <h3>Para profesores</h3>
+              <p>Sube tus cursos y llega a miles de estudiantes con una membresía docente. Knowly revisa la calidad para mantener estándares acreditados.</p>
+            </article>
+            <article className="landing-about-card">
+              <div className="landing-icon-wrap"><BookOpen size={26} /></div>
+              <h3>Para estudiantes</h3>
+              <p>Compra cursos con confianza: contenido estructurado, evaluaciones claras y certificados que respaldan tu aprendizaje.</p>
+            </article>
+            <article className="landing-about-card">
+              <div className="landing-icon-wrap"><Award size={26} /></div>
+              <h3>Cursos acreditados</h3>
+              <p>Cada curso pasa por un proceso de calidad. Solo se publica contenido que cumple criterios pedagógicos y técnicos de excelencia.</p>
+            </article>
+          </div>
+          <div className="landing-trust">
+            <ShieldCheck size={22} />
+            <span>Certificación Knowly · Alta calidad · Comunidad verificada</span>
+            <Sparkles size={20} className="landing-trust-spark" />
+          </div>
         </div>
-      </div>
+      </section>
 
-      {/* ── PILLARS ── */}
-      <section style={{ padding: "100px 24px" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div
-            id="pillars"
-            ref={registerRef("pillars")}
-            className={`section-reveal ${isVisible.pillars ? "visible" : ""}`}
-            style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24 }}
-          >
-            {pillars.map((p, i) => (
-              <div key={i} className="pillar-card">
-                <div style={{ fontSize: 32, marginBottom: 15 }}>{p.icon}</div>
-                <h3 style={{ fontFamily: "'Syne', sans-serif", fontSize: 22, fontWeight: 800, marginBottom: 10 }}>{p.title}</h3>
-                <p style={{ color: "#334155", fontSize: 15, lineHeight: 1.6 }}>{p.desc}</p>
-              </div>
+      <section className="landing-section landing-explore">
+        <div className="landing-container">
+          <header className="landing-section-header landing-section-header--light">
+            <h2>Explora sin registrarte</h2>
+            <p>Navega por las secciones públicas y descubre todo lo que Knowly ofrece.</p>
+          </header>
+          <div className="landing-explore-grid">
+            {exploreLinks.map((item) => (
+              <Link key={item.to} to={item.to} className="landing-explore-card">
+                <GraduationCap size={22} />
+                <div>
+                  <strong>{item.label}</strong>
+                  <span>{item.desc}</span>
+                </div>
+                <ArrowRight size={18} className="landing-explore-arrow" />
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      <footer style={{
-        padding: "40px 48px",
-        textAlign: "center",
-        background: "rgba(0,0,0,0.05)",
-        backdropFilter: "blur(10px)"
-      }}>
-        <p style={{ color: "#1e293b", fontSize: 13, fontWeight: 700, letterSpacing: "0.1em" }}>
-          © 2026 KNOWLY — POTENCIANDO EL FUTURO DIGITAL
-        </p>
-      </footer>
+      <section className="landing-section landing-pricing" id="precios">
+        <div className="landing-container">
+          <header className="landing-section-header">
+            <h2>Membresías para estudiantes</h2>
+            <p>Elige el plan que mejor se adapte a tu ritmo de aprendizaje.</p>
+          </header>
+          <div className="landing-plans-grid">
+            {studentPlans.map((plan) => (
+              <PlanCard key={plan.title} plan={plan} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="landing-section landing-pricing landing-pricing--teachers">
+        <div className="landing-container">
+          <header className="landing-section-header">
+            <h2>Membresías para profesores</h2>
+            <p>Publica, vende y gestiona tus cursos con herramientas diseñadas para docentes.</p>
+          </header>
+          <div className="landing-plans-grid">
+            {teacherPlans.map((plan) => (
+              <PlanCard key={plan.title} plan={plan} tipo="profesor" />
+            ))}
+          </div>
+          <p className="landing-pricing-note">
+            ¿Ya tienes cuenta? <Link to="/estudiantes">Ver detalle de planes estudiantiles</Link> ·{" "}
+            <Link to="/profesores">Ver membresías docentes</Link>
+          </p>
+        </div>
+      </section>
+
+      <section className="landing-cta">
+        <div className="landing-container landing-cta-inner">
+          <h2>¿Listo para empezar?</h2>
+          <p>Únete a Knowly hoy: aprende con cursos acreditados o comparte tu conocimiento.</p>
+          <div className="landing-hero-actions">
+            <Link to="/login" className="landing-btn landing-btn--light">Crear cuenta / Acceder</Link>
+            <Link to="/cursos" className="landing-btn landing-btn--ghost">Ver catálogo</Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="landing-section landing-contact" id="contacto">
+        <div className="landing-container">
+          <header className="landing-section-header landing-section-header--light">
+            <h2>Contacto y equipo</h2>
+            <p>Conoce al equipo detrás de Knowly.</p>
+          </header>
+          <div className="landing-contact-grid">
+            <div className="landing-contact-info">
+              <h3><Mail size={20} /> Escríbenos</h3>
+              <p>¿Dudas sobre membresías, cursos o certificaciones? Contáctanos.</p>
+              <a href="mailto:contacto@knowly.edu" className="landing-contact-email">contacto@knowly.edu</a>
+              <div className="landing-social">
+                <a href="#facebook">Facebook</a>
+                <a href="#instagram">Instagram</a>
+                <a href="#twitter">Twitter</a>
+              </div>
+            </div>
+            <div className="landing-devs">
+              <h3><Users size={20} /> Equipo de desarrollo</h3>
+              <ul className="landing-devs-list">
+                {developers.map((dev) => (
+                  <li key={dev.name}>
+                    <span className="landing-dev-name">{dev.name}</span>
+                    <span className="landing-dev-role">{dev.role}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
-  )
+  );
 }
 
-export default Home
+export default Home;

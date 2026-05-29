@@ -1,119 +1,283 @@
-import { useState, useEffect } from "react"
-import { end_points } from "../Services/api"
-import { redirect } from "../Helpers/alerts"
-import { saveLocalStorage } from "../Helpers/local-storage"
- 
+import { useState, useEffect } from "react";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import { GraduationCap, UserRound, UserPlus, LogIn, Sparkles } from "lucide-react";
+import { redirect } from "../Helpers/alerts";
+import { saveLocalStorage, getLocalStorage } from "../Helpers/local-storage";
+import { findUserForLogin, registerUser, persistLocalUser } from "../Helpers/auth-service";
+import { FREE_PLAN_ID } from "../Helpers/plan-access";
+import { parseCheckoutParams, buildPagoUrl } from "../Helpers/checkout-flow";
+import { getPlanById } from "../data/memberships";
+import Footer from "../Components/Footer";
+import { KNOWLY_LOGO } from "../Helpers/branding";
 
 const Login = () => {
-  const [getCorreo, setCorreo] = useState("")
-  const [getContrasenia, setContrasenia] = useState("")
-  const [getRol, setRol] = useState("")
-  const [getUsuario, setUsuario] = useState([])
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const checkout = parseCheckoutParams(searchParams);
+  const pendingPlan = checkout ? getPlanById(checkout.planId, checkout.tipo) : null;
 
-  function fetchUsuario() {
-    console.log("Intentando descargar usuarios de:", end_points.usuario);
-    fetch(end_points.usuario, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    })
-      .then((response) => {
-        if (!response.ok) throw new Error("Error en la respuesta del servidor");
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Datos cargados correctamente:", data);
-        setUsuario(data)
-      })
-      .catch((error) => {
-        console.error("Error al cargar usuarios:", error);
-        // Opcional: mostrar una alerta si la API no carga
-      })
-  }
+  const initialModo = searchParams.get("modo") === "login" ? "login" : "register";
+  const initialRol = checkout?.tipo === "profesor" ? "profesor" : "estudiante";
+
+  const [modo, setModo] = useState(initialModo);
+  const [rol, setRol] = useState(initialRol);
+  const [nombre, setNombre] = useState("");
+  const [correo, setCorreo] = useState("");
+  const [contrasea, setContrasea] = useState("");
+  const [confirmar, setConfirmar] = useState("");
+  const [cargando, setCargando] = useState(false);
+  const [error, setError] = useState(null);
+  const [apiOk, setApiOk] = useState(null);
 
   useEffect(() => {
-    fetchUsuario()
-  }, [])
+    const sesion = getLocalStorage("Usuario");
+    if (sesion && checkout) {
+      navigate(buildPagoUrl(checkout.planId, checkout.tipo), { replace: true });
+    }
+  }, [checkout, navigate]);
 
-  const findUsuario = () => {
-    return Array.isArray(getUsuario) && getUsuario.find(
-      (item) =>
-        item.correo?.trim().toLowerCase() === getCorreo.trim().toLowerCase() &&
-        String(item.contrasenia) === String(getContrasenia) && 
-        item.rol?.toUpperCase() === getRol.toUpperCase()
-    )
+  function afterAuthSuccess(user) {
+    if (checkout && pendingPlan) {
+      redirect(
+        `Cuenta lista. Continúa con el pago del plan ${pendingPlan.title}.`,
+        buildPagoUrl(checkout.planId, checkout.tipo),
+        "success"
+      );
+      return;
+    }
+    if (user.rol === "profesor") {
+      redirect(`${user.nombre}, bienvenido`, "/profesor", "success");
+    } else {
+      redirect(`${user.nombre}, bienvenido a Knowly`, "/home", "success");
+    }
   }
 
-  function signIn(e) {
+  async function handleLogin(e) {
     e.preventDefault();
-    const userMatched = findUsuario();
-    
-    console.log("Intentando ingresar con:", { correo: getCorreo, rol: getRol });
-    console.log("Usuario encontrado:", userMatched);
+    setCargando(true);
+    setError(null);
+    try {
+      const usuario = await findUserForLogin(correo, contrasea);
+      if (usuario) {
+        const sesion = {
+          ...usuario,
+          rol: usuario.rol || rol,
+        };
+        persistLocalUser(sesion);
+        saveLocalStorage("Usuario", sesion);
+        setApiOk(true);
+        afterAuthSuccess(sesion);
+      } else {
+        setError("Correo o contraseña incorrectos.");
+      }
+    } catch (err) {
+      setApiOk(false);
+      setError(`No se pudo conectar con la API: ${err.message}`);
+    } finally {
+      setCargando(false);
+    }
+  }
 
-    if (userMatched) {
-      saveLocalStorage("Usuario", userMatched)
-      redirect(userMatched.nombre + " Bienvenido al sistema...", "/", "success")
-    } else {
-      redirect("El correo, la contraseña o el rol son incorrectos...", "/", "error")
+  async function handleRegister(e) {
+    e.preventDefault();
+    if (contrasea !== confirmar) {
+      setError("Las contraseñas no coinciden.");
+      return;
+    }
+    if (contrasea.length < 6) {
+      setError("La contraseña debe tener al menos 6 caracteres.");
+      return;
+    }
+    setCargando(true);
+    setError(null);
+    try {
+      const user = await registerUser({
+        nombre,
+        correo,
+        contrasea,
+        rol,
+        planId: FREE_PLAN_ID,
+      });
+      saveLocalStorage("Usuario", user);
+      setApiOk(true);
+      if (checkout && pendingPlan) {
+        afterAuthSuccess(user);
+      } else {
+        redirect(
+          `Cuenta creada. Plan gratuito activo — puedes leer el blog y explorar cursos.`,
+          "/blogs",
+          "success"
+        );
+      }
+    } catch (err) {
+      setApiOk(false);
+      setError(`Error al registrar: ${err.message}`);
+    } finally {
+      setCargando(false);
     }
   }
 
   return (
-    <section className="Login">
-      <div className="login-container">
-        <h2>Iniciar sesión</h2>
-        <form className="login-form" onSubmit={signIn}>
-          <input 
-            type="text" 
-            placeholder="Correo" 
-            required 
-            onChange={(e) => setCorreo(e.target.value)} 
-          />
-          <input 
-            type="password" 
-            placeholder="Contraseña" 
-            required 
-            onChange={(e) => setContrasenia(e.target.value)} 
-          />
-          <select 
-            required 
-            value={getRol}
-            onChange={(e) => setRol(e.target.value)}
-          >
-            <option value="" disabled>Selecciona tu rol</option>
-            <option value="Estudiante">ESTUDIANTE</option>
-            <option value="Profesor">PROFESOR</option>
-          </select>
-          <button className="btn-primary" type="submit">
-            Entrar
-          </button>
-        </form>
+    <div className="app login-page">
+      <header className="login-topbar">
+        <Link to="/" className="login-logo-link" title="Volver al inicio">
+          <img src={KNOWLY_LOGO} alt="Knowly" />
+        </Link>
+      </header>
+      <section className="Login">
+        <div className="login-container login-container--wide">
+          {pendingPlan && (
+            <div className="login-checkout-banner">
+              <Sparkles size={18} />
+              <div>
+                <strong>Plan seleccionado: {pendingPlan.title}</strong>
+                <p>
+                  {modo === "register"
+                    ? "Crea tu cuenta para continuar al pago. La membresía quedará vinculada a tu perfil."
+                    : "Inicia sesión para continuar al pago de tu membresía."}
+                </p>
+              </div>
+            </div>
+          )}
 
-        <div className="divider">
-          <span>o</span>
-        </div>
+          <div className="login-mode-tabs">
+            <button
+              type="button"
+              className={`login-mode-tab${modo === "login" ? " login-mode-tab--active" : ""}`}
+              onClick={() => {
+                setModo("login");
+                setError(null);
+              }}
+            >
+              <LogIn size={18} /> Iniciar sesión
+            </button>
+            <button
+              type="button"
+              className={`login-mode-tab${modo === "register" ? " login-mode-tab--active" : ""}`}
+              onClick={() => {
+                setModo("register");
+                setError(null);
+              }}
+            >
+              <UserPlus size={18} /> Registrarse
+            </button>
+          </div>
 
-        <div className="social-buttons">
-          <button className="btn-social google" type="button">
-            <svg width="20" height="20" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg">
-              <path fill="#4285F4" d="M533.5 278.4c0-17.8-1.6-35-4.6-51.7H272v98h146.9c-6.3 34-25 62.7-53 82v68h85.5c50-46 81-114 81-196.3z"/>
-              <path fill="#34A853" d="M272 544.3c72.7 0 133.8-24.1 178.5-65.4l-85.5-68c-23.8 16-54.4 25.6-93 25.6-71 0-131.1-48-152.5-112.3h-89.8v70.7c44.5 88 135.3 150.4 242.3 150.4z"/>
-              <path fill="#FBBC05" d="M119.5 323.9c-10.6-31.3-10.6-64.9 0-96.2v-70.7h-89.8c-38.7 77.3-38.7 168.5 0 245.8l89.8-79z"/>
-              <path fill="#EA4335" d="M272 107.1c39.6 0 75 13.6 102.9 40.4l77.1-77.1C405.8 24 345.4 0 272 0 164.9 0 74.1 62.4 29.6 150.4l89.8 70.7C140.9 155.1 201 107.1 272 107.1z"/>
-            </svg>
-            Continuar con Google
-          </button>
-          <button className="btn-social facebook" type="button">
-            <svg width="20" height="20" viewBox="0 0 96.1 96.1" xmlns="http://www.w3.org/2000/svg">
-              <path fill="#3B5998" d="M72.1 0H24C10.8 0 0 10.8 0 24v48.1c0 13.3 10.8 24 24 24h25.9V58.9h-8.8V46.6h8.8v-9.9c0-8.7 5.3-13.5 13-13.5 3.7 0 6.8.3 7.7.5v8.9h-5.3c-4.2 0-5 2-5 5v6.4h10l-1.3 12.3h-8.7V96h17.1c13.3 0 24-10.8 24-24V24c0-13.2-10.7-24-24-24z"/>
-            </svg>
-            Continuar con Facebook
-          </button>
+          <div className="login-role-tabs">
+            <button
+              type="button"
+              className={`login-role-tab${rol === "estudiante" ? " login-role-tab--active" : ""}`}
+              onClick={() => setRol("estudiante")}
+              disabled={Boolean(checkout)}
+            >
+              <GraduationCap size={20} /> Estudiante
+            </button>
+            <button
+              type="button"
+              className={`login-role-tab${rol === "profesor" ? " login-role-tab--active" : ""}`}
+              onClick={() => setRol("profesor")}
+              disabled={Boolean(checkout)}
+            >
+              <UserRound size={20} /> Profesor
+            </button>
+          </div>
+
+          <p className="login-role-hint">
+            {pendingPlan
+              ? modo === "register"
+                ? `Regístrate como ${checkout.tipo === "profesor" ? "profesor" : "estudiante"} y luego completa el pago.`
+                : "Si ya tienes cuenta, inicia sesión para pagar tu plan."
+              : modo === "register"
+                ? "Al registrarte obtienes el plan Gratuito. Puedes mejorar tu membresía cuando quieras."
+                : rol === "profesor"
+                  ? "Accede al panel docente con tu membresía."
+                  : "Accede a cursos según tu plan activo."}
+          </p>
+
+          {apiOk === false && (
+            <div className="login-api-warn">
+              La API MockAPI no respondió; se usó respaldo local si aplica.
+            </div>
+          )}
+
+          {error && <div className="login-error">⚠️ {error}</div>}
+
+          {modo === "login" ? (
+            <form className="login-form" onSubmit={handleLogin}>
+              <input
+                type="email"
+                placeholder="Correo"
+                required
+                value={correo}
+                onChange={(e) => setCorreo(e.target.value)}
+              />
+              <input
+                type="password"
+                placeholder="Contraseña"
+                required
+                value={contrasea}
+                onChange={(e) => setContrasea(e.target.value)}
+              />
+              <button className="btn-primary" type="submit" disabled={cargando}>
+                {cargando
+                  ? "Conectando..."
+                  : pendingPlan
+                    ? "Iniciar sesión y continuar al pago"
+                    : "Entrar"}
+              </button>
+            </form>
+          ) : (
+            <form className="login-form" onSubmit={handleRegister}>
+              <input
+                type="text"
+                placeholder="Nombre completo"
+                required
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+              />
+              <input
+                type="email"
+                placeholder="Correo"
+                required
+                value={correo}
+                onChange={(e) => setCorreo(e.target.value)}
+              />
+              <input
+                type="password"
+                placeholder="Contraseña (mín. 6 caracteres)"
+                required
+                value={contrasea}
+                onChange={(e) => setContrasea(e.target.value)}
+              />
+              <input
+                type="password"
+                placeholder="Confirmar contraseña"
+                required
+                value={confirmar}
+                onChange={(e) => setConfirmar(e.target.value)}
+              />
+              <button className="btn-primary" type="submit" disabled={cargando}>
+                {cargando
+                  ? "Creando cuenta..."
+                  : pendingPlan
+                    ? "Crear cuenta y continuar al pago"
+                    : "Crear cuenta gratis"}
+              </button>
+            </form>
+          )}
+
+          {!pendingPlan && (
+            <p className="login-free-note">
+              Plan gratuito: <Link to="/blogs">blog</Link> y explorar{" "}
+              <Link to="/cursos">cursos</Link> (las lecciones requieren plan de pago).{" "}
+              <Link to="/estudiantes">Ver planes de pago</Link>
+            </p>
+          )}
         </div>
-      </div>
-    </section>
-  )
-}
+      </section>
+      <Footer />
+    </div>
+  );
+};
+
 export default Login;

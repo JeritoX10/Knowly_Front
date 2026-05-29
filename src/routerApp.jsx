@@ -5,9 +5,14 @@ import Contacto from "./Pages/Contacto";
 import Estudiantes from "./Pages/Estudiantes";
 import Certificados from "./Pages/Certificados";
 import Blogs from "./Pages/Blogs";
+import BlogDetalle from "./Pages/BlogDetalle";
+import Profesores from "./Pages/Profesores";
 import Vista from "./Pages/Vista";
 import Administrador from "./Pages/Administrador";
+import Profesor from "./Pages/Profesor";
+import Pago from "./Pages/Pago";
 import App from "./App";
+
 
 export const routerApp = [
   {
@@ -18,50 +23,19 @@ export const routerApp = [
     path: "/",
     element: <App />,
     children: [
-      {
-        path: "/",
-        element: <Home />
-      },
-
-      {
-        path: "/home",
-        element: <Home />
-      },
-
-      {
-        path: "/administrador",
-        element: <Administrador />
-      },
-
-      {
-        path: "/cursos",
-        element: <Cursos />
-      },
-
-      {
-        path: "/contacto",
-        element: <Contacto />
-      },
-
-      {
-        path: "/estudiantes",
-        element: <Estudiantes />
-      },
-
-      {
-        path: "/certificados",
-        element: <Certificados />
-      },
-
-      {
-        path: "/blogs",
-        element: <Blogs />
-      },
-
-      {
-        path: "/curso/:slug",
-        element: <Vista />
-      },
+      { path: "/", element: <Home /> },
+      { path: "/home", element: <Home /> },
+      { path: "/administrador", element: <Administrador /> },
+      { path: "/cursos", element: <Cursos /> },
+      { path: "/contacto", element: <Contacto /> },
+      { path: "/estudiantes", element: <Estudiantes /> },
+      { path: "/certificados", element: <Certificados /> },
+      { path: "/blogs", element: <Blogs /> },
+      { path: "/blogs/:slug", element: <BlogDetalle /> },
+      { path: "/curso/:slug", element: <Vista /> },
+      { path: "/profesores", element: <Profesores /> },
+      { path: "/profesor", element: <Profesor /> },
+      { path: "/pago", element: <Pago /> },
     ],
   },
 ];
