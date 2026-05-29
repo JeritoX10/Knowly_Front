@@ -55,6 +55,9 @@ const NavBar = function () {
           <Link to="/certificados" onClick={closeMembership}>
             Certificado
           </Link>
+          <Link to="/administrador" onClick={closeMembership}>
+            Admin
+          </Link>
 
           <div className="navbar-dropdown" ref={dropdownRef}>
             <button

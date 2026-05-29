@@ -8,6 +8,7 @@ import {
   Sparkles,
   ArrowRight,
   Mail,
+  Check, // Added Check icon for PlanCard
   Users,
 } from "lucide-react";
 import { studentMemberships, teacherMemberships } from "../data/memberships";
@@ -15,61 +16,102 @@ import { planCtaUrl } from "../Helpers/checkout-flow";
 import { KNOWLY_LOGO } from "../Helpers/branding";
 
 const studentPlans = studentMemberships;
-const teacherPlans = teacherMemberships;
+const teacherPlans = teacherMemberships; // Define teacherPlans here
 
-const exploreLinks = [
-  { to: "/cursos", label: "Explorar cursos", desc: "Mira el catálogo sin registrarte" },
-  { to: "/blogs", label: "Leer blogs", desc: "Artículos y novedades educativas" },
-  { to: "/contacto", label: "Comunidad", desc: "Reseñas y opiniones de usuarios" },
-  { to: "/certificados", label: "Certificados", desc: "Conoce nuestro sistema de acreditación" },
-];
-
-const developers = [
-  { name: "Juan José Castrillón", role: "Desarrollo frontend" },
-  { name: "Johan Cadavid", role: "Desarrollo backend" },
-  { name: "Jerónimo Taborda", role: "Integración y UI" },
-  { name: "Sebastián Herrera", role: "Arquitectura" },
-  { name: "Sharon Asprilla", role: "Diseño y QA" },
-];
-
+// Define PlanCard component outside Home
 function PlanCard({ plan, tipo = "estudiante" }) {
   const ctaTo = planCtaUrl(plan, tipo);
 
   return (
-    <article className={`landing-plan-card${plan.highlighted ? " landing-plan-card--featured" : ""}`}>
-      {plan.highlighted && <span className="landing-plan-badge">Más popular</span>}
-      {plan.isFree && <span className="landing-plan-badge landing-plan-badge--free">Gratis</span>}
-      <h3 className="landing-plan-title">{plan.title}</h3>
-      <div className="landing-plan-price">
-        <span className="landing-plan-amount">{plan.price}</span>
-        <span className="landing-plan-period">/{plan.period}</span>
+    <article
+      className="membership-plan-card" // Using a class from the inline style block
+      style={{
+        background: "rgba(255, 255, 255, 0.4)",
+        border: "1px solid rgba(255, 255, 255, 0.5)",
+        borderRadius: "24px",
+        padding: "28px",
+        transition: "all 0.3s ease",
+        backdropFilter: "blur(12px)",
+      }}
+    >
+      <h3 style={{ fontSize: "24px", fontWeight: "700", marginBottom: "12px", color: "#18181B" }}>{plan.title}</h3>
+      <div style={{ fontSize: "36px", fontWeight: "800", color: "#1D4ED8", marginBottom: "16px" }}>
+        {plan.price}
+        <small style={{ fontSize: "16px", fontWeight: "500", color: "#4B5563" }}>/{plan.period}</small>
       </div>
-      <p className="landing-plan-desc">{plan.desc}</p>
-      <ul className="landing-plan-features">
-        {(plan.benefits ?? plan.features ?? []).map((f) => (
-          <li key={f}>{f}</li>
+      <p style={{ fontSize: "15px", color: "#4B5563", marginBottom: "24px" }}>{plan.desc}</p>
+      <ul style={{ listStyle: "none", padding: 0, marginBottom: "24px" }}>
+        {plan.benefits.map((benefit, index) => (
+          <li key={index} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "14px", color: "#18181B", marginBottom: "8px" }}>
+            <Check size={16} style={{ color: "#22c55e" }} /> {benefit}
+          </li>
         ))}
       </ul>
-      <Link to={ctaTo} className="landing-plan-cta">
-        {plan.isFree ? "Empezar gratis" : "Elegir plan"}
+      <Link to={ctaTo} className="btn-primary" style={{ width: "100%" }}>
+        Elegir {plan.title}
       </Link>
     </article>
   );
 }
 
 function Home() {
+  const exploreLinks = [
+    { to: "/cursos", label: "Explorar cursos", desc: "Mira el catálogo sin registrarte" },
+    { to: "/blogs", label: "Leer blogs", desc: "Artículos y novedades educativas" },
+    { to: "/contacto", label: "Comunidad", desc: "Reseñas y opiniones de usuarios" },
+    { to: "/certificados", label: "Certificados", desc: "Conoce nuestro sistema de acreditación" },
+  ];
+
+  const developers = [
+    { name: "Juan José Castrillón", role: "Desarrollo frontend" },
+    { name: "Johan Cadavid", role: "Desarrollo backend" },
+    { name: "Jerónimo Taborda", role: "Integración y UI" },
+    { name: "Sebastián Herrera", role: "Arquitectura" },
+    { name: "Sharon Asprilla", role: "Diseño y QA" },
+  ];
+
+  // Removed the inline <style> block and duplicate <nav> from Home component
+  // The main App.jsx already renders NavBar and global styles should be in App.css or index.css
+
+  // Use KNOWLY_LOGO instead of undefined 'logo'
+  // Removed scrollY dependency as it's not defined in this scope and NavBar is handled by App.jsx
+
   return (
-    <div className="landing">
-      <section className="landing-hero">
-        <div className="landing-hero-inner">
-          <div className="landing-hero-brand">
-            <img src={KNOWLY_LOGO} alt="Knowly Logo" className="landing-logo" />
-            <div className="landing-hero-text">
-              <p className="landing-eyebrow">Formación acreditada de alta calidad</p>
-              <h1 className="landing-title">
-                Aprende, enseña y crece con <span>Knowly</span>
-              </h1>
-            </div>
+    <div className="main" style={{
+      fontFamily: "'Outfit', 'Segoe UI', sans-serif",
+      background: "linear-gradient(90deg, rgb(165, 110, 245) 0%, rgb(180, 130, 250) 25%, rgb(220, 195, 255) 50%, rgb(180, 130, 250) 75%, rgb(165, 110, 245) 100%)",
+      color: "#18181B",
+      overflowX: "hidden"
+    }}>
+
+      {/* ── HERO ── */}
+      <section style={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
+        padding: "100px 24px",
+        position: "relative",
+      }}>
+        <div style={{ animation: "fadeUp 1s ease forwards", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center" }}>
+          
+          <img
+            src={KNOWLY_LOGO}
+            alt="Knowly Logo"
+            style={{ width: 180, height: 180, marginBottom: 20, filter: "drop-shadow(0 10px 15px rgba(0,0,0,0.1))" }}
+          />
+
+          <div style={{
+            display: "inline-flex", alignItems: "center", gap: 8,
+            background: "rgba(255, 255, 255, 0.5)",
+            borderRadius: 999, padding: "6px 16px",
+            fontSize: 13, fontWeight: 600, color: "#1e40af",
+            marginBottom: 24,
+          }}>
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#1D4ED8", display: "inline-block", /* animation: "pulse-ring 1.5s infinite" */ }} />
+            Plataforma educativa #1 en LATAM
           </div>
           <p className="landing-subtitle">
             La plataforma donde profesores publican y venden cursos, y estudiantes acceden a
