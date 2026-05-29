@@ -127,7 +127,7 @@ export async function registerUser(userData) {
 export async function findUserForLogin(correo, contrasea) {
   const localUsers = getLocalUsers();
   const localMatch = localUsers.find(
-    (u) => u.correo === correo && u.contrasea === contrasea
+    (u) => u.correo === correo && (u.contrasenia === contrasea || u.contrasea === contrasea)
   );
 
   if (localMatch) {
@@ -146,7 +146,7 @@ export async function findUserForLogin(correo, contrasea) {
   }
 
   const apiMatch = apiUsers.find(
-    (u) => u.correo === correo && u.contrasea === contrasea
+    (u) => u.correo === correo && (u.contrasenia === contrasea || u.contrasea === contrasea)
   );
 
   if (!apiMatch) return null;
