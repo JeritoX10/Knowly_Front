@@ -198,7 +198,8 @@ const Home = () => {
         <div style={{ display: "flex", gap: 36 }}>
           <Link className="nav-link" to="/blogs">Blogs</Link>
           <Link className="nav-link" to="/cursos">Cursos</Link>
-          <Link className="nav-link" to="/nosotros">Nosotros</Link>
+          <Link className="nav-link" to="/contacto">Nosotros</Link>
+          <Link className="nav-link" to="/administrador">Administracion</Link>
         </div>
 
         <Link to="/login" className="btn-primary" style={{ padding: "8px 20px", fontSize: 14, borderRadius: 12 }}>

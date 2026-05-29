@@ -54,7 +54,7 @@ const Login = () => {
 
     if (userMatched) {
       saveLocalStorage("Usuario", userMatched)
-      redirect(userMatched.nombre + " Bienvenido al sistema...", "/home", "success")
+      redirect(userMatched.nombre + " Bienvenido al sistema...", "/", "success")
     } else {
       redirect("El correo, la contraseña o el rol son incorrectos...", "/", "error")
     }

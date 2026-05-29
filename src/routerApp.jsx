@@ -6,6 +6,7 @@ import Estudiantes from "./Pages/Estudiantes";
 import Certificados from "./Pages/Certificados";
 import Blogs from "./Pages/Blogs";
 import Vista from "./Pages/Vista";
+import Administrador from "./Pages/Administrador";
 import App from "./App";
 
 export const routerApp = [
@@ -25,6 +26,11 @@ export const routerApp = [
       {
         path: "/home",
         element: <Home />
+      },
+
+      {
+        path: "/administrador",
+        element: <Administrador />
       },
 
       {
