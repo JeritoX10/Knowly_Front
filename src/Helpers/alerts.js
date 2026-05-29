@@ -17,7 +17,7 @@ export function redirect(message, url, icono) {
         },
         willClose: () => {
             clearInterval(timerInterval);
-            window.location.href = url;
+            if (url) window.location.href = url;
         }
     });
 }

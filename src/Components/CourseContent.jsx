@@ -1,64 +1,75 @@
-export default function CourseContent({ lesson }) {
-    return (
-        <section className="flex min-h-[calc(100vh-140px)] items-start justify-center px-6 pb-10">
-            <div
-                className="mx-auto w-full max-w-[1100px] rounded-2xl border border-white/20 bg-[#2b1645]/70 shadow-2xl backdrop-blur-xl"
-                style={{
-                    padding: "28px",
-                }}
-            >
-                <div className="flex items-center justify-between">
-                    <h2 className="text-[28px] font-extrabold text-white">
-                        {lesson.title}
-                    </h2>
+import { Link } from "react-router-dom";
+import { CheckCircle, PlayCircle, Award, PartyPopper } from "lucide-react";
 
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="32"
-                        height="32"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-white/80"
-                    >
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                        <polyline points="22 4 12 14.01 9 11.01" />
-                    </svg>
-                </div>
+export default function CourseContent({
+  lesson,
+  courseName,
+  isCompleted,
+  onFinishCourse,
+  finishing,
+}) {
+  if (!lesson) return null;
 
-                <div
-                    className="overflow-hidden rounded-2xl border border-white/20 bg-black"
-                    style={{
-                        marginTop: "28px",
-                        marginLeft: "22px",
-                        marginRight: "22px",
-                    }}
-                >
-                    <div className="aspect-video">
-                        <iframe
-                            className="h-full w-full"
-                            src={lesson.video}
-                            title={lesson.title}
-                            allowFullScreen
-                        />
-                    </div>
-                </div>
-
-                <div className="mt-7 border-t border-white/20" />
-
-                <div className="mt-8">
-                    <h3 className="text-[22px] font-extrabold text-white">
-                        ✨ {lesson.title} ✨
-                    </h3>
-
-                    <p className="mt-4 text-[17px] leading-7 text-white/85">
-                        {lesson.description}
-                    </p>
-                </div>
+  return (
+    <section className="course-content">
+      <div className="course-content-card">
+        <header className="course-content-header">
+          <div>
+            <p className="course-content-breadcrumb">{courseName}</p>
+            <h2>{lesson.title}</h2>
+          </div>
+          {isCompleted ? (
+            <div className="course-content-finished">
+              <Award size={22} />
+              <span>Curso finalizado</span>
+              <Link to="/certificados" className="course-content-finished-link">
+                Ver diploma
+              </Link>
             </div>
-        </section>
-    )
+          ) : (
+            <button
+              type="button"
+              className="course-content-complete"
+              title="Finalizar curso y obtener tu diploma"
+              onClick={onFinishCourse}
+              disabled={finishing}
+            >
+              {finishing ? (
+                <>
+                  <CheckCircle size={22} className="course-content-complete-spin" />
+                  <span>Guardando...</span>
+                </>
+              ) : (
+                <>
+                  <PartyPopper size={22} />
+                  <span>Finalizar curso</span>
+                </>
+              )}
+            </button>
+          )}
+        </header>
+
+        <div className="course-content-video">
+          <div className="course-content-video-badge">
+            <PlayCircle size={18} />
+            Lección en video
+          </div>
+          <div className="course-content-video-frame">
+            <iframe src={lesson.video} title={lesson.title} allowFullScreen />
+          </div>
+        </div>
+
+        <div className="course-content-description">
+          <h3>Acerca de esta lección</h3>
+          <p>{lesson.description}</p>
+          {!isCompleted && (
+            <p className="course-content-finish-hint">
+              Cuando termines de revisar el contenido, pulsa <strong>Finalizar curso</strong> para
+              generar tu diploma acreditado Knowly.
+            </p>
+          )}
+        </div>
+      </div>
+    </section>
+  );
 }

@@ -12,10 +12,6 @@ function Card() {
     className="Card__desc">Descripción corta del curso
     </p>
 
-    <div 
-    className="Card__price">$99
-    </div>
-
     <button 
     className="Card__btn">Ingresar
     </button>
